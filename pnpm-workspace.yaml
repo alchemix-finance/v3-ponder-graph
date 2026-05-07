@@ -1,0 +1,24 @@
+# Supply chain security settings
+# https://pnpm.io/supply-chain-security
+
+# Require packages to be published at least 7 days before installing
+# Protects against supply chain attacks on freshly published malicious versions
+minimumReleaseAge: 10080
+
+# Packages exempt from the age requirement (if needed)
+# minimumReleaseAgeExclude:
+#   - "@myorg/*"
+
+# Block git/tarball/path dependencies in subdependencies
+# Only direct dependencies can use exotic specifiers
+blockExoticSubdeps: true
+
+# Prevent trust level downgrades (e.g., from registry to git)
+trustPolicy: no-downgrade
+
+# Packages exempt from trust downgrade checks
+# trustPolicyExclude:
+# - "semver@6.3.1"
+
+# Allows ignoring the trust policy check for packages published more than the specified number of minutes ago
+trustPolicyIgnoreAfter: 10080
