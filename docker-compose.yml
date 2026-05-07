@@ -1,0 +1,8 @@
+services:
+  indexer:
+    build: .
+    env_file:
+      - .env.local
+    ports:
+      - "42069:42069"
+    restart: unless-stopped
