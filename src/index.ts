@@ -1,27 +1,28 @@
 import { ponder } from "ponder:registry";
 import {
-  accrueInterest,
+  alchemistBatchLiquidated,
+  alchemistBurn,
+  alchemistDeposit,
+  alchemistForceRepay,
+  alchemistLiquidated,
   alchemistMetadata,
-  alchemistV3Deposit,
+  alchemistMint,
+  alchemistRedemption,
+  alchemistRepay,
+  alchemistSelfLiquidated,
+  alchemistStat,
   alchemistV3PositionTransfer,
-  alchemistV3Withdraw,
-  allocate,
-  batchLiquidated,
-  burn,
-  deallocate,
-  forceRepay,
-  liquidated,
-  mint,
+  alchemistWithdraw,
+  mytAccrueInterest,
+  mytAllocate,
+  mytDeallocate,
   mytDeposit,
+  mytTotalAssetsAndSupply,
   mytWithdraw,
-  positionClaimed,
-  positionCreated,
-  redemption,
-  repay,
-  selfLiquidated,
-  stats,
-  totalAssetsAndSupply,
-  transmutermetadata,
+  transmuterDepositCap,
+  transmuterMetadata,
+  transmuterPositionClaimed,
+  transmuterPositionCreated,
 } from "ponder:schema";
 import { AlchemistV3PositionAbi } from "../abis/AlchemistV3PositionAbi";
 import { MYTAbi } from "../abis/MYTAbi";
@@ -77,7 +78,7 @@ ponder.on("alchemistV3:BatchLiquidated", async ({ event, context }) => {
   const _typecast_47__result = event.block.timestamp.toString();
   const _strconcat_48__result = `${_strconcat_46__result}/${_typecast_47__result}`;
   await context.db
-    .insert(stats)
+    .insert(alchemistStat)
     .values({
       id: _strconcat_48__result,
       chain: context.chain.name,
@@ -111,11 +112,10 @@ ponder.on("alchemistV3:BatchLiquidated", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(batchLiquidated).values({
+        await context.db.insert(alchemistBatchLiquidated).values({
           id: __id,
           chain: context.chain.name,
           alchemist: event.log.address,
-          accounts: [...event.args.accounts],
           liquidator: event.args.liquidator,
           amount: event.args.amount,
           feeInYield: event.args.feeInYield,
@@ -190,7 +190,7 @@ ponder.on("alchemistV3:Burn", async ({ event, context }) => {
   const _typecast_47__result = event.block.timestamp.toString();
   const _strconcat_48__result = `${_strconcat_46__result}/${_typecast_47__result}`;
   await context.db
-    .insert(stats)
+    .insert(alchemistStat)
     .values({
       id: _strconcat_48__result,
       chain: context.chain.name,
@@ -224,7 +224,7 @@ ponder.on("alchemistV3:Burn", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(burn).values({
+        await context.db.insert(alchemistBurn).values({
           id: __id,
           chain: context.chain.name,
           alchemist: event.log.address,
@@ -300,7 +300,7 @@ ponder.on("alchemistV3:Deposit", async ({ event, context }) => {
   const _typecast_47__result = event.block.timestamp.toString();
   const _strconcat_48__result = `${_strconcat_46__result}/${_typecast_47__result}`;
   await context.db
-    .insert(stats)
+    .insert(alchemistStat)
     .values({
       id: _strconcat_48__result,
       chain: context.chain.name,
@@ -334,7 +334,7 @@ ponder.on("alchemistV3:Deposit", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(alchemistV3Deposit).values({
+        await context.db.insert(alchemistDeposit).values({
           id: __id,
           chain: context.chain.name,
           alchemist: event.log.address,
@@ -410,7 +410,7 @@ ponder.on("alchemistV3:ForceRepay", async ({ event, context }) => {
   const _typecast_47__result = event.block.timestamp.toString();
   const _strconcat_48__result = `${_strconcat_46__result}/${_typecast_47__result}`;
   await context.db
-    .insert(stats)
+    .insert(alchemistStat)
     .values({
       id: _strconcat_48__result,
       chain: context.chain.name,
@@ -444,7 +444,7 @@ ponder.on("alchemistV3:ForceRepay", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(forceRepay).values({
+        await context.db.insert(alchemistForceRepay).values({
           id: __id,
           chain: context.chain.name,
           alchemist: event.log.address,
@@ -571,7 +571,7 @@ ponder.on("alchemistV3:Liquidated", async ({ event, context }) => {
   const _typecast_47__result = event.block.timestamp.toString();
   const _strconcat_48__result = `${_strconcat_46__result}/${_typecast_47__result}`;
   await context.db
-    .insert(stats)
+    .insert(alchemistStat)
     .values({
       id: _strconcat_48__result,
       chain: context.chain.name,
@@ -605,7 +605,7 @@ ponder.on("alchemistV3:Liquidated", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(liquidated).values({
+        await context.db.insert(alchemistLiquidated).values({
           id: __id,
           chain: context.chain.name,
           alchemist: event.log.address,
@@ -684,7 +684,7 @@ ponder.on("alchemistV3:Mint", async ({ event, context }) => {
   const _typecast_47__result = event.block.timestamp.toString();
   const _strconcat_48__result = `${_strconcat_46__result}/${_typecast_47__result}`;
   await context.db
-    .insert(stats)
+    .insert(alchemistStat)
     .values({
       id: _strconcat_48__result,
       chain: context.chain.name,
@@ -718,7 +718,7 @@ ponder.on("alchemistV3:Mint", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(mint).values({
+        await context.db.insert(alchemistMint).values({
           id: __id,
           chain: context.chain.name,
           alchemist: event.log.address,
@@ -795,7 +795,7 @@ ponder.on("alchemistV3:Redemption", async ({ event, context }) => {
   const _typecast_47__result = event.block.timestamp.toString();
   const _strconcat_48__result = `${_strconcat_46__result}/${_typecast_47__result}`;
   await context.db
-    .insert(stats)
+    .insert(alchemistStat)
     .values({
       id: _strconcat_48__result,
       chain: context.chain.name,
@@ -829,7 +829,7 @@ ponder.on("alchemistV3:Redemption", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(redemption).values({
+        await context.db.insert(alchemistRedemption).values({
           id: __id,
           chain: context.chain.name,
           alchemist: event.log.address,
@@ -904,7 +904,7 @@ ponder.on("alchemistV3:Repay", async ({ event, context }) => {
   const _typecast_47__result = event.block.timestamp.toString();
   const _strconcat_48__result = `${_strconcat_46__result}/${_typecast_47__result}`;
   await context.db
-    .insert(stats)
+    .insert(alchemistStat)
     .values({
       id: _strconcat_48__result,
       chain: context.chain.name,
@@ -938,7 +938,7 @@ ponder.on("alchemistV3:Repay", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(repay).values({
+        await context.db.insert(alchemistRepay).values({
           id: __id,
           chain: context.chain.name,
           alchemist: event.log.address,
@@ -1016,7 +1016,7 @@ ponder.on("alchemistV3:SelfLiquidated", async ({ event, context }) => {
   const _typecast_47__result = event.block.timestamp.toString();
   const _strconcat_48__result = `${_strconcat_46__result}/${_typecast_47__result}`;
   await context.db
-    .insert(stats)
+    .insert(alchemistStat)
     .values({
       id: _strconcat_48__result,
       chain: context.chain.name,
@@ -1050,7 +1050,7 @@ ponder.on("alchemistV3:SelfLiquidated", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(selfLiquidated).values({
+        await context.db.insert(alchemistSelfLiquidated).values({
           id: __id,
           chain: context.chain.name,
           alchemist: event.log.address,
@@ -1126,7 +1126,7 @@ ponder.on("alchemistV3:Withdraw", async ({ event, context }) => {
   const _typecast_47__result = event.block.timestamp.toString();
   const _strconcat_48__result = `${_strconcat_46__result}/${_typecast_47__result}`;
   await context.db
-    .insert(stats)
+    .insert(alchemistStat)
     .values({
       id: _strconcat_48__result,
       chain: context.chain.name,
@@ -1160,7 +1160,7 @@ ponder.on("alchemistV3:Withdraw", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(alchemistV3Withdraw).values({
+        await context.db.insert(alchemistWithdraw).values({
           id: __id,
           chain: context.chain.name,
           alchemist: event.log.address,
@@ -1209,7 +1209,7 @@ ponder.on("MYT:Abdicate", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -1254,7 +1254,7 @@ ponder.on("MYT:Accept", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -1284,7 +1284,7 @@ ponder.on("MYT:AccrueInterest", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(accrueInterest).values({
+        await context.db.insert(mytAccrueInterest).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -1332,7 +1332,7 @@ ponder.on("MYT:AccrueInterest", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -1362,7 +1362,7 @@ ponder.on("MYT:Allocate", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(allocate).values({
+        await context.db.insert(mytAllocate).values({
           id: __id,
           chain: context.chain.name,
           sender: event.args.sender,
@@ -1411,7 +1411,7 @@ ponder.on("MYT:Allocate", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -1456,7 +1456,7 @@ ponder.on("MYT:AllowanceUpdatedByTransferFrom", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -1486,7 +1486,7 @@ ponder.on("MYT:Deallocate", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(deallocate).values({
+        await context.db.insert(mytDeallocate).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -1535,7 +1535,7 @@ ponder.on("MYT:Deallocate", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -1580,7 +1580,7 @@ ponder.on("MYT:DecreaseAbsoluteCap", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -1625,7 +1625,7 @@ ponder.on("MYT:DecreaseRelativeCap", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -1670,7 +1670,7 @@ ponder.on("MYT:DecreaseTimelock", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -1748,7 +1748,7 @@ ponder.on("MYT:Deposit", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -1793,7 +1793,7 @@ ponder.on("MYT:ForceDeallocate", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -1838,7 +1838,7 @@ ponder.on("MYT:IncreaseAbsoluteCap", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -1883,7 +1883,7 @@ ponder.on("MYT:IncreaseRelativeCap", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -1928,7 +1928,7 @@ ponder.on("MYT:IncreaseTimelock", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -1973,7 +1973,7 @@ ponder.on("MYT:Permit", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -2018,7 +2018,7 @@ ponder.on("MYT:RemoveAdapter", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -2063,7 +2063,7 @@ ponder.on("MYT:Revoke", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -2108,7 +2108,7 @@ ponder.on("MYT:SetAdapterRegistry", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -2153,7 +2153,7 @@ ponder.on("MYT:SetForceDeallocatePenalty", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -2198,7 +2198,7 @@ ponder.on("MYT:SetLiquidityAdapterAndData", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -2243,7 +2243,7 @@ ponder.on("MYT:SetManagementFee", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -2288,7 +2288,7 @@ ponder.on("MYT:SetManagementFeeRecipient", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -2333,7 +2333,7 @@ ponder.on("MYT:SetMaxRate", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -2378,7 +2378,7 @@ ponder.on("MYT:Submit", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -2423,7 +2423,7 @@ ponder.on("MYT:Transfer", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -2502,7 +2502,7 @@ ponder.on("MYT:Withdraw", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(totalAssetsAndSupply).values({
+        await context.db.insert(mytTotalAssetsAndSupply).values({
           id: __id,
           chain: context.chain.name,
           myt: event.log.address,
@@ -2557,7 +2557,7 @@ ponder.on("transmuterV3:AlchemistUpdated", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(transmutermetadata).values({
+        await context.db.insert(transmuterMetadata).values({
           id: __id,
           chain: context.chain.name,
           alchemist: _contractread_94__out_param0,
@@ -2582,7 +2582,83 @@ ponder.on("transmuterV3:AlchemistUpdated", async ({ event, context }) => {
   }
 });
 
+ponder.on("transmuterV3:DepositCapUpdated", async ({ event, context }) => {
+  const _contractread_112__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "depositCap",
+    blockNumber: event.block.number,
+  });
+  const _contractread_113__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "totalActiveLocked",
+    blockNumber: event.block.number,
+  });
+  const _contractread_114__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "totalLocked",
+    blockNumber: event.block.number,
+  });
+  const _typecast_109__result = event.transaction.hash;
+  const _typecast_110__result = event.block.timestamp.toString();
+  const _strconcat_111__result = `${_typecast_109__result}/${_typecast_110__result}`;
+  await context.db
+    .insert(transmuterDepositCap)
+    .values({
+      id: _strconcat_111__result,
+      chain: context.chain.name,
+      depositCap: _contractread_112__out_param0,
+      totalActiveLocked: _contractread_113__out_param0,
+      totalLocked: _contractread_114__out_param0,
+    })
+    .onConflictDoUpdate((row) => ({
+      chain: context.chain.name,
+      depositCap: _contractread_112__out_param0,
+      totalActiveLocked: _contractread_113__out_param0,
+      totalLocked: _contractread_114__out_param0,
+    }));
+});
+
 ponder.on("transmuterV3:PositionClaimed", async ({ event, context }) => {
+  const _contractread_112__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "depositCap",
+    blockNumber: event.block.number,
+  });
+  const _contractread_113__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "totalActiveLocked",
+    blockNumber: event.block.number,
+  });
+  const _contractread_114__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "totalLocked",
+    blockNumber: event.block.number,
+  });
+  const _typecast_109__result = event.transaction.hash;
+  const _typecast_110__result = event.block.timestamp.toString();
+  const _strconcat_111__result = `${_typecast_109__result}/${_typecast_110__result}`;
+  await context.db
+    .insert(transmuterDepositCap)
+    .values({
+      id: _strconcat_111__result,
+      chain: context.chain.name,
+      depositCap: _contractread_112__out_param0,
+      totalActiveLocked: _contractread_113__out_param0,
+      totalLocked: _contractread_114__out_param0,
+    })
+    .onConflictDoUpdate((row) => ({
+      chain: context.chain.name,
+      depositCap: _contractread_112__out_param0,
+      totalActiveLocked: _contractread_113__out_param0,
+      totalLocked: _contractread_114__out_param0,
+    }));
+
   const _contractread_85__out_param0 = await context.client.readContract({
     abi: transmuterV3Abi,
     address: event.log.address,
@@ -2600,7 +2676,7 @@ ponder.on("transmuterV3:PositionClaimed", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(positionClaimed).values({
+        await context.db.insert(transmuterPositionClaimed).values({
           id: __id,
           chain: context.chain.name,
           claimer: event.args.claimer,
@@ -2628,6 +2704,43 @@ ponder.on("transmuterV3:PositionClaimed", async ({ event, context }) => {
 });
 
 ponder.on("transmuterV3:PositionCreated", async ({ event, context }) => {
+  const _contractread_112__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "depositCap",
+    blockNumber: event.block.number,
+  });
+  const _contractread_113__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "totalActiveLocked",
+    blockNumber: event.block.number,
+  });
+  const _contractread_114__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "totalLocked",
+    blockNumber: event.block.number,
+  });
+  const _typecast_109__result = event.transaction.hash;
+  const _typecast_110__result = event.block.timestamp.toString();
+  const _strconcat_111__result = `${_typecast_109__result}/${_typecast_110__result}`;
+  await context.db
+    .insert(transmuterDepositCap)
+    .values({
+      id: _strconcat_111__result,
+      chain: context.chain.name,
+      depositCap: _contractread_112__out_param0,
+      totalActiveLocked: _contractread_113__out_param0,
+      totalLocked: _contractread_114__out_param0,
+    })
+    .onConflictDoUpdate((row) => ({
+      chain: context.chain.name,
+      depositCap: _contractread_112__out_param0,
+      totalActiveLocked: _contractread_113__out_param0,
+      totalLocked: _contractread_114__out_param0,
+    }));
+
   const _contractread_88__out_param0 = await context.client.readContract({
     abi: transmuterV3Abi,
     address: event.log.address,
@@ -2645,7 +2758,7 @@ ponder.on("transmuterV3:PositionCreated", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(positionCreated).values({
+        await context.db.insert(transmuterPositionCreated).values({
           id: __id,
           chain: context.chain.name,
           creator: event.args.creator,
@@ -2670,6 +2783,84 @@ ponder.on("transmuterV3:PositionCreated", async ({ event, context }) => {
       }
     }
   }
+});
+
+ponder.on("transmuterV3:PositionPoked", async ({ event, context }) => {
+  const _contractread_112__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "depositCap",
+    blockNumber: event.block.number,
+  });
+  const _contractread_113__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "totalActiveLocked",
+    blockNumber: event.block.number,
+  });
+  const _contractread_114__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "totalLocked",
+    blockNumber: event.block.number,
+  });
+  const _typecast_109__result = event.transaction.hash;
+  const _typecast_110__result = event.block.timestamp.toString();
+  const _strconcat_111__result = `${_typecast_109__result}/${_typecast_110__result}`;
+  await context.db
+    .insert(transmuterDepositCap)
+    .values({
+      id: _strconcat_111__result,
+      chain: context.chain.name,
+      depositCap: _contractread_112__out_param0,
+      totalActiveLocked: _contractread_113__out_param0,
+      totalLocked: _contractread_114__out_param0,
+    })
+    .onConflictDoUpdate((row) => ({
+      chain: context.chain.name,
+      depositCap: _contractread_112__out_param0,
+      totalActiveLocked: _contractread_113__out_param0,
+      totalLocked: _contractread_114__out_param0,
+    }));
+});
+
+ponder.on("transmuterV3:Transfer", async ({ event, context }) => {
+  const _contractread_112__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "depositCap",
+    blockNumber: event.block.number,
+  });
+  const _contractread_113__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "totalActiveLocked",
+    blockNumber: event.block.number,
+  });
+  const _contractread_114__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "totalLocked",
+    blockNumber: event.block.number,
+  });
+  const _typecast_109__result = event.transaction.hash;
+  const _typecast_110__result = event.block.timestamp.toString();
+  const _strconcat_111__result = `${_typecast_109__result}/${_typecast_110__result}`;
+  await context.db
+    .insert(transmuterDepositCap)
+    .values({
+      id: _strconcat_111__result,
+      chain: context.chain.name,
+      depositCap: _contractread_112__out_param0,
+      totalActiveLocked: _contractread_113__out_param0,
+      totalLocked: _contractread_114__out_param0,
+    })
+    .onConflictDoUpdate((row) => ({
+      chain: context.chain.name,
+      depositCap: _contractread_112__out_param0,
+      totalActiveLocked: _contractread_113__out_param0,
+      totalLocked: _contractread_114__out_param0,
+    }));
 });
 
 ponder.on("transmuterV3:setup", async ({ context }) => {

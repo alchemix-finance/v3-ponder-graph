@@ -1,7 +1,7 @@
 import { index, onchainTable } from "ponder";
 
-export const alchemistV3Deposit = onchainTable(
-  "alchemistV3Deposit",
+export const alchemistDeposit = onchainTable(
+  "alchemistDeposit",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -17,8 +17,8 @@ export const alchemistV3Deposit = onchainTable(
   }),
 );
 
-export const burn = onchainTable(
-  "burn",
+export const alchemistBurn = onchainTable(
+  "alchemistBurn",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -34,13 +34,12 @@ export const burn = onchainTable(
   }),
 );
 
-export const batchLiquidated = onchainTable(
-  "batchLiquidated",
+export const alchemistBatchLiquidated = onchainTable(
+  "alchemistBatchLiquidated",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
     alchemist: t.hex(),
-    accounts: t.bigint().array(),
     liquidator: t.hex(),
     amount: t.bigint(),
     feeInYield: t.bigint(),
@@ -54,8 +53,8 @@ export const batchLiquidated = onchainTable(
   }),
 );
 
-export const forceRepay = onchainTable(
-  "forceRepay",
+export const alchemistForceRepay = onchainTable(
+  "alchemistForceRepay",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -73,8 +72,8 @@ export const forceRepay = onchainTable(
   }),
 );
 
-export const liquidated = onchainTable(
-  "liquidated",
+export const alchemistLiquidated = onchainTable(
+  "alchemistLiquidated",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -93,8 +92,8 @@ export const liquidated = onchainTable(
   }),
 );
 
-export const mint = onchainTable(
-  "mint",
+export const alchemistMint = onchainTable(
+  "alchemistMint",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -111,8 +110,8 @@ export const mint = onchainTable(
   }),
 );
 
-export const repay = onchainTable(
-  "repay",
+export const alchemistRepay = onchainTable(
+  "alchemistRepay",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -130,8 +129,8 @@ export const repay = onchainTable(
   }),
 );
 
-export const redemption = onchainTable(
-  "redemption",
+export const alchemistRedemption = onchainTable(
+  "alchemistRedemption",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -146,8 +145,8 @@ export const redemption = onchainTable(
   }),
 );
 
-export const selfLiquidated = onchainTable(
-  "selfLiquidated",
+export const alchemistSelfLiquidated = onchainTable(
+  "alchemistSelfLiquidated",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -163,8 +162,8 @@ export const selfLiquidated = onchainTable(
   }),
 );
 
-export const alchemistV3Withdraw = onchainTable(
-  "alchemistV3Withdraw",
+export const alchemistWithdraw = onchainTable(
+  "alchemistWithdraw",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -181,8 +180,8 @@ export const alchemistV3Withdraw = onchainTable(
   }),
 );
 
-export const accrueInterest = onchainTable(
-  "accrueInterest",
+export const mytAccrueInterest = onchainTable(
+  "mytAccrueInterest",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -200,8 +199,8 @@ export const accrueInterest = onchainTable(
   }),
 );
 
-export const allocate = onchainTable(
-  "allocate",
+export const mytAllocate = onchainTable(
+  "mytAllocate",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -220,8 +219,8 @@ export const allocate = onchainTable(
   }),
 );
 
-export const deallocate = onchainTable(
-  "deallocate",
+export const mytDeallocate = onchainTable(
+  "mytDeallocate",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -279,8 +278,8 @@ export const mytWithdraw = onchainTable(
   }),
 );
 
-export const totalAssetsAndSupply = onchainTable(
-  "totalAssetsAndSupply",
+export const mytTotalAssetsAndSupply = onchainTable(
+  "mytTotalAssetsAndSupply",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -293,8 +292,8 @@ export const totalAssetsAndSupply = onchainTable(
   }),
 );
 
-export const stats = onchainTable(
-  "stats",
+export const alchemistStat = onchainTable(
+  "alchemistStat",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -314,8 +313,8 @@ export const stats = onchainTable(
   }),
 );
 
-export const metadata = onchainTable(
-  "metadata",
+export const mytMetadata = onchainTable(
+  "mytMetadata",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -345,8 +344,8 @@ export const alchemistMetadata = onchainTable(
   }),
 );
 
-export const positionClaimed = onchainTable(
-  "positionClaimed",
+export const transmuterPositionClaimed = onchainTable(
+  "transmuterPositionClaimed",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -362,8 +361,8 @@ export const positionClaimed = onchainTable(
   }),
 );
 
-export const positionCreated = onchainTable(
-  "positionCreated",
+export const transmuterPositionCreated = onchainTable(
+  "transmuterPositionCreated",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -379,8 +378,8 @@ export const positionCreated = onchainTable(
   }),
 );
 
-export const transmutermetadata = onchainTable(
-  "transmutermetadata",
+export const transmuterMetadata = onchainTable(
+  "transmuterMetadata",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
@@ -409,6 +408,20 @@ export const alchemistV3PositionTransfer = onchainTable(
     txHash: t.hex(),
     blockNumber: t.bigint(),
     timestamp: t.bigint(),
+  }),
+  (table) => ({
+    chainIdx: index().on(table.chain),
+  }),
+);
+
+export const transmuterDepositCap = onchainTable(
+  "transmuterDepositCap",
+  (t) => ({
+    id: t.text().primaryKey(),
+    chain: t.text().notNull(),
+    depositCap: t.bigint(),
+    totalActiveLocked: t.bigint(),
+    totalLocked: t.bigint(),
   }),
   (table) => ({
     chainIdx: index().on(table.chain),
