@@ -13,16 +13,17 @@ import {
   alchemistStat,
   alchemistV3PositionTransfer,
   alchemistWithdraw,
+  depositCap,
   mytAccrueInterest,
   mytAllocate,
   mytDeallocate,
   mytDeposit,
   mytTotalAssetsAndSupply,
   mytWithdraw,
-  transmuterDepositCap,
   transmuterMetadata,
   transmuterPositionClaimed,
   transmuterPositionCreated,
+  transmuterStat,
 } from "ponder:schema";
 import { AlchemistV3PositionAbi } from "../abis/AlchemistV3PositionAbi";
 import { MYTAbi } from "../abis/MYTAbi";
@@ -92,6 +93,7 @@ ponder.on("alchemistV3:BatchLiquidated", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -105,6 +107,7 @@ ponder.on("alchemistV3:BatchLiquidated", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     }));
 
   {
@@ -204,6 +207,7 @@ ponder.on("alchemistV3:Burn", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -217,6 +221,7 @@ ponder.on("alchemistV3:Burn", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     }));
 
   {
@@ -314,6 +319,7 @@ ponder.on("alchemistV3:Deposit", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -327,6 +333,7 @@ ponder.on("alchemistV3:Deposit", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     }));
 
   {
@@ -343,6 +350,157 @@ ponder.on("alchemistV3:Deposit", async ({ event, context }) => {
           txHash: event.transaction.hash,
           blockNumber: event.block.number,
           timestamp: event.block.timestamp,
+        });
+        break;
+      } catch (__e) {
+        {
+          const __cn = (__e as any)?.constructor?.name ?? "";
+          const __em = String((__e as any)?.message ?? "");
+          const __isUnique =
+            __cn === "UniqueConstraintError" ||
+            (__e as any)?.code === "23505" ||
+            __em.toLowerCase().includes("unique");
+          if (__isUnique) continue;
+        }
+        throw __e;
+      }
+    }
+  }
+});
+
+ponder.on("alchemistV3:DepositCapUpdated", async ({ event, context }) => {
+  const _contractread_43__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "getTotalDeposited",
+    blockNumber: event.block.number,
+  });
+  const _contractread_49__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "getTotalUnderlyingValue",
+    blockNumber: event.block.number,
+  });
+  const _contractread_103__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "cumulativeEarmarked",
+    blockNumber: event.block.number,
+  });
+  const _contractread_104__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "getUnrealizedCumulativeEarmarked",
+    blockNumber: event.block.number,
+  });
+  const _contractread_105__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "globalMinimumCollateralization",
+    blockNumber: event.block.number,
+  });
+  const _contractread_106__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "totalDebt",
+    blockNumber: event.block.number,
+  });
+  const _contractread_107__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "totalSyntheticsIssued",
+    blockNumber: event.block.number,
+  });
+  const _typecast_44__result = event.log.address;
+  const _typecast_45__result = event.transaction.hash;
+  const _strconcat_46__result = `${_typecast_44__result}/${_typecast_45__result}`;
+  const _typecast_47__result = event.block.timestamp.toString();
+  const _strconcat_48__result = `${_strconcat_46__result}/${_typecast_47__result}`;
+  await context.db
+    .insert(alchemistStat)
+    .values({
+      id: _strconcat_48__result,
+      chain: context.chain.name,
+      alchemist: event.log.address,
+      myttvl: _contractread_43__out_param0,
+      underlyingtvl: _contractread_49__out_param0,
+      blockNumber: event.block.number,
+      timestamp: event.block.timestamp,
+      cumulativeEarmarked: _contractread_103__out_param0,
+      unrealizedCumulativeEarmarked: _contractread_104__out_param0,
+      globalMinimumCollateralization: _contractread_105__out_param0,
+      totalDebt: _contractread_106__out_param0,
+      totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
+    })
+    .onConflictDoUpdate((row) => ({
+      chain: context.chain.name,
+      alchemist: event.log.address,
+      myttvl: _contractread_43__out_param0,
+      underlyingtvl: _contractread_49__out_param0,
+      blockNumber: event.block.number,
+      timestamp: event.block.timestamp,
+      cumulativeEarmarked: _contractread_103__out_param0,
+      unrealizedCumulativeEarmarked: _contractread_104__out_param0,
+      globalMinimumCollateralization: _contractread_105__out_param0,
+      totalDebt: _contractread_106__out_param0,
+      totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
+    }));
+
+  const _contractread_112__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "depositCap",
+    blockNumber: event.block.number,
+  });
+  const _contractread_113__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "totalActiveLocked",
+    blockNumber: event.block.number,
+  });
+  const _contractread_114__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "totalLocked",
+    blockNumber: event.block.number,
+  });
+  const _typecast_109__result = event.transaction.hash;
+  const _typecast_110__result = event.block.timestamp.toString();
+  const _strconcat_111__result = `${_typecast_109__result}/${_typecast_110__result}`;
+  await context.db
+    .insert(transmuterStat)
+    .values({
+      id: _strconcat_111__result,
+      chain: context.chain.name,
+      depositCap: _contractread_112__out_param0,
+      totalActiveLocked: _contractread_113__out_param0,
+      totalLocked: _contractread_114__out_param0,
+      timestamp: event.block.timestamp,
+      transmuter: event.log.address,
+    })
+    .onConflictDoUpdate((row) => ({
+      chain: context.chain.name,
+      depositCap: _contractread_112__out_param0,
+      totalActiveLocked: _contractread_113__out_param0,
+      totalLocked: _contractread_114__out_param0,
+      timestamp: event.block.timestamp,
+      transmuter: event.log.address,
+    }));
+
+  {
+    const __baseId = event.id;
+    for (let __n = 1; ; __n++) {
+      const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
+      try {
+        await context.db.insert(depositCap).values({
+          id: __id,
+          chain: context.chain.name,
+          alchemist: event.log.address,
+          timestamp: event.block.timestamp,
+          blockNumber: event.block.number,
+          txHash: event.transaction.hash,
         });
         break;
       } catch (__e) {
@@ -424,6 +582,7 @@ ponder.on("alchemistV3:ForceRepay", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -437,6 +596,7 @@ ponder.on("alchemistV3:ForceRepay", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     }));
 
   {
@@ -511,6 +671,7 @@ ponder.on("alchemistV3:Initialized", async ({ event, context }) => {
       myt: _contractread_81__out_param0,
       transmuter: _contractread_82__out_param0,
       underlyingtoken: _contractread_83__out_param0,
+      timestamp: event.block.timestamp,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -519,6 +680,7 @@ ponder.on("alchemistV3:Initialized", async ({ event, context }) => {
       myt: _contractread_81__out_param0,
       transmuter: _contractread_82__out_param0,
       underlyingtoken: _contractread_83__out_param0,
+      timestamp: event.block.timestamp,
     }));
 });
 
@@ -585,6 +747,7 @@ ponder.on("alchemistV3:Liquidated", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -598,6 +761,7 @@ ponder.on("alchemistV3:Liquidated", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     }));
 
   {
@@ -698,6 +862,7 @@ ponder.on("alchemistV3:Mint", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -711,6 +876,7 @@ ponder.on("alchemistV3:Mint", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     }));
 
   {
@@ -809,6 +975,7 @@ ponder.on("alchemistV3:Redemption", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -822,6 +989,7 @@ ponder.on("alchemistV3:Redemption", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     }));
 
   {
@@ -918,6 +1086,7 @@ ponder.on("alchemistV3:Repay", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -931,6 +1100,7 @@ ponder.on("alchemistV3:Repay", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     }));
 
   {
@@ -1030,6 +1200,7 @@ ponder.on("alchemistV3:SelfLiquidated", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -1043,6 +1214,7 @@ ponder.on("alchemistV3:SelfLiquidated", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     }));
 
   {
@@ -1140,6 +1312,7 @@ ponder.on("alchemistV3:Withdraw", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -1153,6 +1326,7 @@ ponder.on("alchemistV3:Withdraw", async ({ event, context }) => {
       globalMinimumCollateralization: _contractread_105__out_param0,
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
+      txHash: event.transaction.hash,
     }));
 
   {
@@ -2563,7 +2737,8 @@ ponder.on("transmuterV3:AlchemistUpdated", async ({ event, context }) => {
           alchemist: _contractread_94__out_param0,
           name: _contractread_95__out_param0,
           synthetictoken: _contractread_96__out_param0,
-          address: event.log.address,
+          transmuter: event.log.address,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2605,19 +2780,23 @@ ponder.on("transmuterV3:DepositCapUpdated", async ({ event, context }) => {
   const _typecast_110__result = event.block.timestamp.toString();
   const _strconcat_111__result = `${_typecast_109__result}/${_typecast_110__result}`;
   await context.db
-    .insert(transmuterDepositCap)
+    .insert(transmuterStat)
     .values({
       id: _strconcat_111__result,
       chain: context.chain.name,
       depositCap: _contractread_112__out_param0,
       totalActiveLocked: _contractread_113__out_param0,
       totalLocked: _contractread_114__out_param0,
+      timestamp: event.block.timestamp,
+      transmuter: event.log.address,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
       depositCap: _contractread_112__out_param0,
       totalActiveLocked: _contractread_113__out_param0,
       totalLocked: _contractread_114__out_param0,
+      timestamp: event.block.timestamp,
+      transmuter: event.log.address,
     }));
 });
 
@@ -2644,19 +2823,23 @@ ponder.on("transmuterV3:PositionClaimed", async ({ event, context }) => {
   const _typecast_110__result = event.block.timestamp.toString();
   const _strconcat_111__result = `${_typecast_109__result}/${_typecast_110__result}`;
   await context.db
-    .insert(transmuterDepositCap)
+    .insert(transmuterStat)
     .values({
       id: _strconcat_111__result,
       chain: context.chain.name,
       depositCap: _contractread_112__out_param0,
       totalActiveLocked: _contractread_113__out_param0,
       totalLocked: _contractread_114__out_param0,
+      timestamp: event.block.timestamp,
+      transmuter: event.log.address,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
       depositCap: _contractread_112__out_param0,
       totalActiveLocked: _contractread_113__out_param0,
       totalLocked: _contractread_114__out_param0,
+      timestamp: event.block.timestamp,
+      transmuter: event.log.address,
     }));
 
   const _contractread_85__out_param0 = await context.client.readContract({
@@ -2685,6 +2868,7 @@ ponder.on("transmuterV3:PositionClaimed", async ({ event, context }) => {
           transmuter: event.log.address,
           name: _contractread_85__out_param0,
           alchemist: _contractread_87__out_param0,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2726,19 +2910,23 @@ ponder.on("transmuterV3:PositionCreated", async ({ event, context }) => {
   const _typecast_110__result = event.block.timestamp.toString();
   const _strconcat_111__result = `${_typecast_109__result}/${_typecast_110__result}`;
   await context.db
-    .insert(transmuterDepositCap)
+    .insert(transmuterStat)
     .values({
       id: _strconcat_111__result,
       chain: context.chain.name,
       depositCap: _contractread_112__out_param0,
       totalActiveLocked: _contractread_113__out_param0,
       totalLocked: _contractread_114__out_param0,
+      timestamp: event.block.timestamp,
+      transmuter: event.log.address,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
       depositCap: _contractread_112__out_param0,
       totalActiveLocked: _contractread_113__out_param0,
       totalLocked: _contractread_114__out_param0,
+      timestamp: event.block.timestamp,
+      transmuter: event.log.address,
     }));
 
   const _contractread_88__out_param0 = await context.client.readContract({
@@ -2767,6 +2955,7 @@ ponder.on("transmuterV3:PositionCreated", async ({ event, context }) => {
           alchemist: _contractread_88__out_param0,
           name: _contractread_89__out_param0,
           transmuter: event.log.address,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2808,19 +2997,23 @@ ponder.on("transmuterV3:PositionPoked", async ({ event, context }) => {
   const _typecast_110__result = event.block.timestamp.toString();
   const _strconcat_111__result = `${_typecast_109__result}/${_typecast_110__result}`;
   await context.db
-    .insert(transmuterDepositCap)
+    .insert(transmuterStat)
     .values({
       id: _strconcat_111__result,
       chain: context.chain.name,
       depositCap: _contractread_112__out_param0,
       totalActiveLocked: _contractread_113__out_param0,
       totalLocked: _contractread_114__out_param0,
+      timestamp: event.block.timestamp,
+      transmuter: event.log.address,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
       depositCap: _contractread_112__out_param0,
       totalActiveLocked: _contractread_113__out_param0,
       totalLocked: _contractread_114__out_param0,
+      timestamp: event.block.timestamp,
+      transmuter: event.log.address,
     }));
 });
 
@@ -2847,19 +3040,23 @@ ponder.on("transmuterV3:Transfer", async ({ event, context }) => {
   const _typecast_110__result = event.block.timestamp.toString();
   const _strconcat_111__result = `${_typecast_109__result}/${_typecast_110__result}`;
   await context.db
-    .insert(transmuterDepositCap)
+    .insert(transmuterStat)
     .values({
       id: _strconcat_111__result,
       chain: context.chain.name,
       depositCap: _contractread_112__out_param0,
       totalActiveLocked: _contractread_113__out_param0,
       totalLocked: _contractread_114__out_param0,
+      timestamp: event.block.timestamp,
+      transmuter: event.log.address,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
       depositCap: _contractread_112__out_param0,
       totalActiveLocked: _contractread_113__out_param0,
       totalLocked: _contractread_114__out_param0,
+      timestamp: event.block.timestamp,
+      transmuter: event.log.address,
     }));
 });
 

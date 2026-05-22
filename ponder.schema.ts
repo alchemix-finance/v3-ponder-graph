@@ -307,6 +307,7 @@ export const alchemistStat = onchainTable(
     globalMinimumCollateralization: t.bigint(),
     totalDebt: t.bigint(),
     totalSyntheticsIssued: t.bigint(),
+    txHash: t.hex(),
   }),
   (table) => ({
     chainIdx: index().on(table.chain),
@@ -322,6 +323,7 @@ export const mytMetadata = onchainTable(
     name: t.text(),
     symbol: t.text(),
     address: t.hex(),
+    timestamp: t.bigint(),
   }),
   (table) => ({
     chainIdx: index().on(table.chain),
@@ -338,6 +340,7 @@ export const alchemistMetadata = onchainTable(
     myt: t.hex(),
     transmuter: t.hex(),
     underlyingtoken: t.hex(),
+    timestamp: t.bigint(),
   }),
   (table) => ({
     chainIdx: index().on(table.chain),
@@ -355,6 +358,7 @@ export const transmuterPositionClaimed = onchainTable(
     transmuter: t.hex(),
     name: t.text(),
     alchemist: t.hex(),
+    timestamp: t.bigint(),
   }),
   (table) => ({
     chainIdx: index().on(table.chain),
@@ -372,6 +376,7 @@ export const transmuterPositionCreated = onchainTable(
     alchemist: t.hex(),
     name: t.text(),
     transmuter: t.hex(),
+    timestamp: t.bigint(),
   }),
   (table) => ({
     chainIdx: index().on(table.chain),
@@ -386,7 +391,8 @@ export const transmuterMetadata = onchainTable(
     alchemist: t.hex(),
     name: t.text(),
     synthetictoken: t.hex(),
-    address: t.hex(),
+    transmuter: t.hex(),
+    timestamp: t.bigint(),
   }),
   (table) => ({
     chainIdx: index().on(table.chain),
@@ -414,14 +420,32 @@ export const alchemistV3PositionTransfer = onchainTable(
   }),
 );
 
-export const transmuterDepositCap = onchainTable(
-  "transmuterDepositCap",
+export const transmuterStat = onchainTable(
+  "transmuterStat",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),
     depositCap: t.bigint(),
     totalActiveLocked: t.bigint(),
     totalLocked: t.bigint(),
+    timestamp: t.bigint(),
+    transmuter: t.hex(),
+  }),
+  (table) => ({
+    chainIdx: index().on(table.chain),
+  }),
+);
+
+export const depositCap = onchainTable(
+  "depositCap",
+  (t) => ({
+    id: t.text().primaryKey(),
+    chain: t.text().notNull(),
+    depositCap: t.bigint(),
+    alchemist: t.hex(),
+    timestamp: t.bigint(),
+    blockNumber: t.bigint(),
+    txHash: t.hex(),
   }),
   (table) => ({
     chainIdx: index().on(table.chain),
