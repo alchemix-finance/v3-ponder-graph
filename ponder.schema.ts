@@ -258,26 +258,6 @@ export const mytDeposit = onchainTable(
   }),
 );
 
-export const mytWithdraw = onchainTable(
-  "mytWithdraw",
-  (t) => ({
-    id: t.text().primaryKey(),
-    chain: t.text().notNull(),
-    myt: t.hex(),
-    sender: t.hex(),
-    receiver: t.hex(),
-    onBehalf: t.hex(),
-    assets: t.bigint(),
-    shares: t.bigint(),
-    txHash: t.hex(),
-    blockNumber: t.bigint(),
-    timestamp: t.bigint(),
-  }),
-  (table) => ({
-    chainIdx: index().on(table.chain),
-  }),
-);
-
 export const mytTotalAssetsAndSupply = onchainTable(
   "mytTotalAssetsAndSupply",
   (t) => ({
@@ -446,6 +426,26 @@ export const depositCap = onchainTable(
     timestamp: t.bigint(),
     blockNumber: t.bigint(),
     txHash: t.hex(),
+  }),
+  (table) => ({
+    chainIdx: index().on(table.chain),
+  }),
+);
+
+export const mytWithdraw = onchainTable(
+  "mytWithdraw",
+  (t) => ({
+    id: t.text().primaryKey(),
+    chain: t.text().notNull(),
+    sender: t.hex(),
+    receiver: t.hex(),
+    onBehalf: t.hex(),
+    assets: t.bigint(),
+    shares: t.bigint(),
+    myt: t.hex(),
+    txHash: t.hex(),
+    blockNumber: t.bigint(),
+    timeStamp: t.bigint(),
   }),
   (table) => ({
     chainIdx: index().on(table.chain),

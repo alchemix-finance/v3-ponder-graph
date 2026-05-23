@@ -18,6 +18,7 @@ import {
   mytAllocate,
   mytDeallocate,
   mytDeposit,
+  mytMetadata,
   mytTotalAssetsAndSupply,
   mytWithdraw,
   transmuterMetadata,
@@ -446,47 +447,6 @@ ponder.on("alchemistV3:DepositCapUpdated", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
-    }));
-
-  const _contractread_112__out_param0 = await context.client.readContract({
-    abi: transmuterV3Abi,
-    address: event.log.address,
-    functionName: "depositCap",
-    blockNumber: event.block.number,
-  });
-  const _contractread_113__out_param0 = await context.client.readContract({
-    abi: transmuterV3Abi,
-    address: event.log.address,
-    functionName: "totalActiveLocked",
-    blockNumber: event.block.number,
-  });
-  const _contractread_114__out_param0 = await context.client.readContract({
-    abi: transmuterV3Abi,
-    address: event.log.address,
-    functionName: "totalLocked",
-    blockNumber: event.block.number,
-  });
-  const _typecast_109__result = event.transaction.hash;
-  const _typecast_110__result = event.block.timestamp.toString();
-  const _strconcat_111__result = `${_typecast_109__result}/${_typecast_110__result}`;
-  await context.db
-    .insert(transmuterStat)
-    .values({
-      id: _strconcat_111__result,
-      chain: context.chain.name,
-      depositCap: _contractread_112__out_param0,
-      totalActiveLocked: _contractread_113__out_param0,
-      totalLocked: _contractread_114__out_param0,
-      timestamp: event.block.timestamp,
-      transmuter: event.log.address,
-    })
-    .onConflictDoUpdate((row) => ({
-      chain: context.chain.name,
-      depositCap: _contractread_112__out_param0,
-      totalActiveLocked: _contractread_113__out_param0,
-      totalLocked: _contractread_114__out_param0,
-      timestamp: event.block.timestamp,
-      transmuter: event.log.address,
     }));
 
   {
@@ -1654,6 +1614,57 @@ ponder.on("MYT:AllowanceUpdatedByTransferFrom", async ({ event, context }) => {
   }
 });
 
+ponder.on("MYT:Constructor", async ({ event, context }) => {
+  const _contractread_66__out_param0 = await context.client.readContract({
+    abi: MYTAbi,
+    address: event.log.address,
+    functionName: "asset",
+    blockNumber: event.block.number,
+  });
+  const _contractread_67__out_param0 = await context.client.readContract({
+    abi: MYTAbi,
+    address: event.log.address,
+    functionName: "name",
+    blockNumber: event.block.number,
+  });
+  const _contractread_68__out_param0 = await context.client.readContract({
+    abi: MYTAbi,
+    address: event.log.address,
+    functionName: "symbol",
+    blockNumber: event.block.number,
+  });
+  const _typecast_64__result = event.log.address;
+  {
+    const __baseId = _typecast_64__result;
+    for (let __n = 1; ; __n++) {
+      const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
+      try {
+        await context.db.insert(mytMetadata).values({
+          id: __id,
+          chain: context.chain.name,
+          asset: _contractread_66__out_param0,
+          name: _contractread_67__out_param0,
+          symbol: _contractread_68__out_param0,
+          address: event.log.address,
+          timestamp: event.block.timestamp,
+        });
+        break;
+      } catch (__e) {
+        {
+          const __cn = (__e as any)?.constructor?.name ?? "";
+          const __em = String((__e as any)?.message ?? "");
+          const __isUnique =
+            __cn === "UniqueConstraintError" ||
+            (__e as any)?.code === "23505" ||
+            __em.toLowerCase().includes("unique");
+          if (__isUnique) continue;
+        }
+        throw __e;
+      }
+    }
+  }
+});
+
 ponder.on("MYT:Deallocate", async ({ event, context }) => {
   {
     const __baseId = event.id;
@@ -2630,15 +2641,15 @@ ponder.on("MYT:Withdraw", async ({ event, context }) => {
         await context.db.insert(mytWithdraw).values({
           id: __id,
           chain: context.chain.name,
-          myt: event.log.address,
           sender: event.args.sender,
           receiver: event.args.receiver,
           onBehalf: event.args.onBehalf,
           assets: event.args.assets,
           shares: event.args.shares,
+          myt: event.log.address,
           txHash: event.transaction.hash,
           blockNumber: event.block.number,
-          timestamp: event.block.timestamp,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
