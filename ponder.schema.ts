@@ -266,6 +266,7 @@ export const mytTotalAssetsAndSupply = onchainTable(
     myt: t.hex(),
     totalAssets: t.bigint(),
     totalSupply: t.bigint(),
+    timeStamp: t.bigint(),
   }),
   (table) => ({
     chainIdx: index().on(table.chain),
@@ -288,6 +289,9 @@ export const alchemistStat = onchainTable(
     totalDebt: t.bigint(),
     totalSyntheticsIssued: t.bigint(),
     txHash: t.hex(),
+    liquidatorFee: t.bigint(),
+    protocolFee: t.bigint(),
+    repaymentFee: t.bigint(),
   }),
   (table) => ({
     chainIdx: index().on(table.chain),
@@ -410,14 +414,17 @@ export const transmuterStat = onchainTable(
     totalLocked: t.bigint(),
     timestamp: t.bigint(),
     transmuter: t.hex(),
+    exitFee: t.bigint(),
+    timeToTransmute: t.bigint(),
+    transmutationFee: t.bigint(),
   }),
   (table) => ({
     chainIdx: index().on(table.chain),
   }),
 );
 
-export const depositCap = onchainTable(
-  "depositCap",
+export const alchemistDepositCap = onchainTable(
+  "alchemistDepositCap",
   (t) => ({
     id: t.text().primaryKey(),
     chain: t.text().notNull(),

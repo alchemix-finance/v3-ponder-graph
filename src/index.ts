@@ -3,6 +3,7 @@ import {
   alchemistBatchLiquidated,
   alchemistBurn,
   alchemistDeposit,
+  alchemistDepositCap,
   alchemistForceRepay,
   alchemistLiquidated,
   alchemistMetadata,
@@ -13,7 +14,6 @@ import {
   alchemistStat,
   alchemistV3PositionTransfer,
   alchemistWithdraw,
-  depositCap,
   mytAccrueInterest,
   mytAllocate,
   mytDeallocate,
@@ -74,6 +74,24 @@ ponder.on("alchemistV3:BatchLiquidated", async ({ event, context }) => {
     functionName: "totalSyntheticsIssued",
     blockNumber: event.block.number,
   });
+  const _contractread_123__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "liquidatorFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_124__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "protocolFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_125__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "repaymentFee",
+    blockNumber: event.block.number,
+  });
   const _typecast_44__result = event.log.address;
   const _typecast_45__result = event.transaction.hash;
   const _strconcat_46__result = `${_typecast_44__result}/${_typecast_45__result}`;
@@ -95,6 +113,9 @@ ponder.on("alchemistV3:BatchLiquidated", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -109,6 +130,9 @@ ponder.on("alchemistV3:BatchLiquidated", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     }));
 
   {
@@ -188,6 +212,24 @@ ponder.on("alchemistV3:Burn", async ({ event, context }) => {
     functionName: "totalSyntheticsIssued",
     blockNumber: event.block.number,
   });
+  const _contractread_123__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "liquidatorFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_124__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "protocolFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_125__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "repaymentFee",
+    blockNumber: event.block.number,
+  });
   const _typecast_44__result = event.log.address;
   const _typecast_45__result = event.transaction.hash;
   const _strconcat_46__result = `${_typecast_44__result}/${_typecast_45__result}`;
@@ -209,6 +251,9 @@ ponder.on("alchemistV3:Burn", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -223,6 +268,9 @@ ponder.on("alchemistV3:Burn", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     }));
 
   {
@@ -256,6 +304,39 @@ ponder.on("alchemistV3:Burn", async ({ event, context }) => {
     }
   }
 });
+
+ponder.on(
+  "alchemistV3:CollateralizationLowerBoundUpdated",
+  async ({ event, context }) => {
+    {
+      const __baseId = event.id;
+      for (let __n = 1; ; __n++) {
+        const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
+        try {
+          await context.db.insert(alchemistBurn).values({
+            id: __id,
+            chain: context.chain.name,
+            alchemist: event.log.address,
+            txHash: event.transaction.hash,
+            timestamp: event.block.timestamp,
+          });
+          break;
+        } catch (__e) {
+          {
+            const __cn = (__e as any)?.constructor?.name ?? "";
+            const __em = String((__e as any)?.message ?? "");
+            const __isUnique =
+              __cn === "UniqueConstraintError" ||
+              (__e as any)?.code === "23505" ||
+              __em.toLowerCase().includes("unique");
+            if (__isUnique) continue;
+          }
+          throw __e;
+        }
+      }
+    }
+  },
+);
 
 ponder.on("alchemistV3:Deposit", async ({ event, context }) => {
   const _contractread_43__out_param0 = await context.client.readContract({
@@ -300,6 +381,24 @@ ponder.on("alchemistV3:Deposit", async ({ event, context }) => {
     functionName: "totalSyntheticsIssued",
     blockNumber: event.block.number,
   });
+  const _contractread_123__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "liquidatorFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_124__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "protocolFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_125__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "repaymentFee",
+    blockNumber: event.block.number,
+  });
   const _typecast_44__result = event.log.address;
   const _typecast_45__result = event.transaction.hash;
   const _strconcat_46__result = `${_typecast_44__result}/${_typecast_45__result}`;
@@ -321,6 +420,9 @@ ponder.on("alchemistV3:Deposit", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -335,6 +437,9 @@ ponder.on("alchemistV3:Deposit", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     }));
 
   {
@@ -412,6 +517,24 @@ ponder.on("alchemistV3:DepositCapUpdated", async ({ event, context }) => {
     functionName: "totalSyntheticsIssued",
     blockNumber: event.block.number,
   });
+  const _contractread_123__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "liquidatorFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_124__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "protocolFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_125__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "repaymentFee",
+    blockNumber: event.block.number,
+  });
   const _typecast_44__result = event.log.address;
   const _typecast_45__result = event.transaction.hash;
   const _strconcat_46__result = `${_typecast_44__result}/${_typecast_45__result}`;
@@ -433,6 +556,9 @@ ponder.on("alchemistV3:DepositCapUpdated", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -447,6 +573,9 @@ ponder.on("alchemistV3:DepositCapUpdated", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     }));
 
   {
@@ -454,7 +583,7 @@ ponder.on("alchemistV3:DepositCapUpdated", async ({ event, context }) => {
     for (let __n = 1; ; __n++) {
       const __id = __n === 1 ? __baseId : `${__baseId}_${__n}`;
       try {
-        await context.db.insert(depositCap).values({
+        await context.db.insert(alchemistDepositCap).values({
           id: __id,
           chain: context.chain.name,
           alchemist: event.log.address,
@@ -522,6 +651,24 @@ ponder.on("alchemistV3:ForceRepay", async ({ event, context }) => {
     functionName: "totalSyntheticsIssued",
     blockNumber: event.block.number,
   });
+  const _contractread_123__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "liquidatorFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_124__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "protocolFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_125__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "repaymentFee",
+    blockNumber: event.block.number,
+  });
   const _typecast_44__result = event.log.address;
   const _typecast_45__result = event.transaction.hash;
   const _strconcat_46__result = `${_typecast_44__result}/${_typecast_45__result}`;
@@ -543,6 +690,9 @@ ponder.on("alchemistV3:ForceRepay", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -557,6 +707,9 @@ ponder.on("alchemistV3:ForceRepay", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     }));
 
   {
@@ -687,6 +840,24 @@ ponder.on("alchemistV3:Liquidated", async ({ event, context }) => {
     functionName: "totalSyntheticsIssued",
     blockNumber: event.block.number,
   });
+  const _contractread_123__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "liquidatorFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_124__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "protocolFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_125__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "repaymentFee",
+    blockNumber: event.block.number,
+  });
   const _typecast_44__result = event.log.address;
   const _typecast_45__result = event.transaction.hash;
   const _strconcat_46__result = `${_typecast_44__result}/${_typecast_45__result}`;
@@ -708,6 +879,9 @@ ponder.on("alchemistV3:Liquidated", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -722,6 +896,9 @@ ponder.on("alchemistV3:Liquidated", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     }));
 
   {
@@ -802,6 +979,24 @@ ponder.on("alchemistV3:Mint", async ({ event, context }) => {
     functionName: "totalSyntheticsIssued",
     blockNumber: event.block.number,
   });
+  const _contractread_123__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "liquidatorFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_124__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "protocolFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_125__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "repaymentFee",
+    blockNumber: event.block.number,
+  });
   const _typecast_44__result = event.log.address;
   const _typecast_45__result = event.transaction.hash;
   const _strconcat_46__result = `${_typecast_44__result}/${_typecast_45__result}`;
@@ -823,6 +1018,9 @@ ponder.on("alchemistV3:Mint", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -837,6 +1035,9 @@ ponder.on("alchemistV3:Mint", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     }));
 
   {
@@ -915,6 +1116,24 @@ ponder.on("alchemistV3:Redemption", async ({ event, context }) => {
     functionName: "totalSyntheticsIssued",
     blockNumber: event.block.number,
   });
+  const _contractread_123__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "liquidatorFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_124__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "protocolFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_125__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "repaymentFee",
+    blockNumber: event.block.number,
+  });
   const _typecast_44__result = event.log.address;
   const _typecast_45__result = event.transaction.hash;
   const _strconcat_46__result = `${_typecast_44__result}/${_typecast_45__result}`;
@@ -936,6 +1155,9 @@ ponder.on("alchemistV3:Redemption", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -950,6 +1172,9 @@ ponder.on("alchemistV3:Redemption", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     }));
 
   {
@@ -1026,6 +1251,24 @@ ponder.on("alchemistV3:Repay", async ({ event, context }) => {
     functionName: "totalSyntheticsIssued",
     blockNumber: event.block.number,
   });
+  const _contractread_123__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "liquidatorFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_124__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "protocolFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_125__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "repaymentFee",
+    blockNumber: event.block.number,
+  });
   const _typecast_44__result = event.log.address;
   const _typecast_45__result = event.transaction.hash;
   const _strconcat_46__result = `${_typecast_44__result}/${_typecast_45__result}`;
@@ -1047,6 +1290,9 @@ ponder.on("alchemistV3:Repay", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -1061,6 +1307,9 @@ ponder.on("alchemistV3:Repay", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     }));
 
   {
@@ -1140,6 +1389,24 @@ ponder.on("alchemistV3:SelfLiquidated", async ({ event, context }) => {
     functionName: "totalSyntheticsIssued",
     blockNumber: event.block.number,
   });
+  const _contractread_123__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "liquidatorFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_124__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "protocolFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_125__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "repaymentFee",
+    blockNumber: event.block.number,
+  });
   const _typecast_44__result = event.log.address;
   const _typecast_45__result = event.transaction.hash;
   const _strconcat_46__result = `${_typecast_44__result}/${_typecast_45__result}`;
@@ -1161,6 +1428,9 @@ ponder.on("alchemistV3:SelfLiquidated", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -1175,6 +1445,9 @@ ponder.on("alchemistV3:SelfLiquidated", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     }));
 
   {
@@ -1252,6 +1525,24 @@ ponder.on("alchemistV3:Withdraw", async ({ event, context }) => {
     functionName: "totalSyntheticsIssued",
     blockNumber: event.block.number,
   });
+  const _contractread_123__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "liquidatorFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_124__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "protocolFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_125__out_param0 = await context.client.readContract({
+    abi: alchemistV3Abi,
+    address: event.log.address,
+    functionName: "repaymentFee",
+    blockNumber: event.block.number,
+  });
   const _typecast_44__result = event.log.address;
   const _typecast_45__result = event.transaction.hash;
   const _strconcat_46__result = `${_typecast_44__result}/${_typecast_45__result}`;
@@ -1273,6 +1564,9 @@ ponder.on("alchemistV3:Withdraw", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -1287,6 +1581,9 @@ ponder.on("alchemistV3:Withdraw", async ({ event, context }) => {
       totalDebt: _contractread_106__out_param0,
       totalSyntheticsIssued: _contractread_107__out_param0,
       txHash: event.transaction.hash,
+      liquidatorFee: _contractread_123__out_param0,
+      protocolFee: _contractread_124__out_param0,
+      repaymentFee: _contractread_125__out_param0,
     }));
 
   {
@@ -1349,6 +1646,7 @@ ponder.on("MYT:Abdicate", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -1394,6 +1692,7 @@ ponder.on("MYT:Accept", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -1472,6 +1771,7 @@ ponder.on("MYT:AccrueInterest", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -1551,6 +1851,7 @@ ponder.on("MYT:Allocate", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -1596,6 +1897,7 @@ ponder.on("MYT:AllowanceUpdatedByTransferFrom", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -1726,6 +2028,7 @@ ponder.on("MYT:Deallocate", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -1771,6 +2074,7 @@ ponder.on("MYT:DecreaseAbsoluteCap", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -1816,6 +2120,7 @@ ponder.on("MYT:DecreaseRelativeCap", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -1861,6 +2166,7 @@ ponder.on("MYT:DecreaseTimelock", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -1939,6 +2245,7 @@ ponder.on("MYT:Deposit", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -1984,6 +2291,7 @@ ponder.on("MYT:ForceDeallocate", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2029,6 +2337,7 @@ ponder.on("MYT:IncreaseAbsoluteCap", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2074,6 +2383,7 @@ ponder.on("MYT:IncreaseRelativeCap", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2119,6 +2429,7 @@ ponder.on("MYT:IncreaseTimelock", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2164,6 +2475,7 @@ ponder.on("MYT:Permit", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2209,6 +2521,7 @@ ponder.on("MYT:RemoveAdapter", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2254,6 +2567,7 @@ ponder.on("MYT:Revoke", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2299,6 +2613,7 @@ ponder.on("MYT:SetAdapterRegistry", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2344,6 +2659,7 @@ ponder.on("MYT:SetForceDeallocatePenalty", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2389,6 +2705,7 @@ ponder.on("MYT:SetLiquidityAdapterAndData", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2434,6 +2751,7 @@ ponder.on("MYT:SetManagementFee", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2479,6 +2797,7 @@ ponder.on("MYT:SetManagementFeeRecipient", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2524,6 +2843,7 @@ ponder.on("MYT:SetMaxRate", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2569,6 +2889,7 @@ ponder.on("MYT:Submit", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2614,6 +2935,7 @@ ponder.on("MYT:Transfer", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2693,6 +3015,7 @@ ponder.on("MYT:Withdraw", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
+          timeStamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2787,6 +3110,24 @@ ponder.on("transmuterV3:DepositCapUpdated", async ({ event, context }) => {
     functionName: "totalLocked",
     blockNumber: event.block.number,
   });
+  const _contractread_120__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "exitFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_121__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "timeToTransmute",
+    blockNumber: event.block.number,
+  });
+  const _contractread_122__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "transmutationFee",
+    blockNumber: event.block.number,
+  });
   const _typecast_109__result = event.transaction.hash;
   const _typecast_110__result = event.block.timestamp.toString();
   const _strconcat_111__result = `${_typecast_109__result}/${_typecast_110__result}`;
@@ -2800,6 +3141,9 @@ ponder.on("transmuterV3:DepositCapUpdated", async ({ event, context }) => {
       totalLocked: _contractread_114__out_param0,
       timestamp: event.block.timestamp,
       transmuter: event.log.address,
+      exitFee: _contractread_120__out_param0,
+      timeToTransmute: _contractread_121__out_param0,
+      transmutationFee: _contractread_122__out_param0,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -2808,6 +3152,9 @@ ponder.on("transmuterV3:DepositCapUpdated", async ({ event, context }) => {
       totalLocked: _contractread_114__out_param0,
       timestamp: event.block.timestamp,
       transmuter: event.log.address,
+      exitFee: _contractread_120__out_param0,
+      timeToTransmute: _contractread_121__out_param0,
+      transmutationFee: _contractread_122__out_param0,
     }));
 });
 
@@ -2830,6 +3177,24 @@ ponder.on("transmuterV3:PositionClaimed", async ({ event, context }) => {
     functionName: "totalLocked",
     blockNumber: event.block.number,
   });
+  const _contractread_120__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "exitFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_121__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "timeToTransmute",
+    blockNumber: event.block.number,
+  });
+  const _contractread_122__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "transmutationFee",
+    blockNumber: event.block.number,
+  });
   const _typecast_109__result = event.transaction.hash;
   const _typecast_110__result = event.block.timestamp.toString();
   const _strconcat_111__result = `${_typecast_109__result}/${_typecast_110__result}`;
@@ -2843,6 +3208,9 @@ ponder.on("transmuterV3:PositionClaimed", async ({ event, context }) => {
       totalLocked: _contractread_114__out_param0,
       timestamp: event.block.timestamp,
       transmuter: event.log.address,
+      exitFee: _contractread_120__out_param0,
+      timeToTransmute: _contractread_121__out_param0,
+      transmutationFee: _contractread_122__out_param0,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -2851,6 +3219,9 @@ ponder.on("transmuterV3:PositionClaimed", async ({ event, context }) => {
       totalLocked: _contractread_114__out_param0,
       timestamp: event.block.timestamp,
       transmuter: event.log.address,
+      exitFee: _contractread_120__out_param0,
+      timeToTransmute: _contractread_121__out_param0,
+      transmutationFee: _contractread_122__out_param0,
     }));
 
   const _contractread_85__out_param0 = await context.client.readContract({
@@ -2917,6 +3288,24 @@ ponder.on("transmuterV3:PositionCreated", async ({ event, context }) => {
     functionName: "totalLocked",
     blockNumber: event.block.number,
   });
+  const _contractread_120__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "exitFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_121__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "timeToTransmute",
+    blockNumber: event.block.number,
+  });
+  const _contractread_122__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "transmutationFee",
+    blockNumber: event.block.number,
+  });
   const _typecast_109__result = event.transaction.hash;
   const _typecast_110__result = event.block.timestamp.toString();
   const _strconcat_111__result = `${_typecast_109__result}/${_typecast_110__result}`;
@@ -2930,6 +3319,9 @@ ponder.on("transmuterV3:PositionCreated", async ({ event, context }) => {
       totalLocked: _contractread_114__out_param0,
       timestamp: event.block.timestamp,
       transmuter: event.log.address,
+      exitFee: _contractread_120__out_param0,
+      timeToTransmute: _contractread_121__out_param0,
+      transmutationFee: _contractread_122__out_param0,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -2938,6 +3330,9 @@ ponder.on("transmuterV3:PositionCreated", async ({ event, context }) => {
       totalLocked: _contractread_114__out_param0,
       timestamp: event.block.timestamp,
       transmuter: event.log.address,
+      exitFee: _contractread_120__out_param0,
+      timeToTransmute: _contractread_121__out_param0,
+      transmutationFee: _contractread_122__out_param0,
     }));
 
   const _contractread_88__out_param0 = await context.client.readContract({
@@ -3004,6 +3399,24 @@ ponder.on("transmuterV3:PositionPoked", async ({ event, context }) => {
     functionName: "totalLocked",
     blockNumber: event.block.number,
   });
+  const _contractread_120__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "exitFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_121__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "timeToTransmute",
+    blockNumber: event.block.number,
+  });
+  const _contractread_122__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "transmutationFee",
+    blockNumber: event.block.number,
+  });
   const _typecast_109__result = event.transaction.hash;
   const _typecast_110__result = event.block.timestamp.toString();
   const _strconcat_111__result = `${_typecast_109__result}/${_typecast_110__result}`;
@@ -3017,6 +3430,9 @@ ponder.on("transmuterV3:PositionPoked", async ({ event, context }) => {
       totalLocked: _contractread_114__out_param0,
       timestamp: event.block.timestamp,
       transmuter: event.log.address,
+      exitFee: _contractread_120__out_param0,
+      timeToTransmute: _contractread_121__out_param0,
+      transmutationFee: _contractread_122__out_param0,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -3025,6 +3441,9 @@ ponder.on("transmuterV3:PositionPoked", async ({ event, context }) => {
       totalLocked: _contractread_114__out_param0,
       timestamp: event.block.timestamp,
       transmuter: event.log.address,
+      exitFee: _contractread_120__out_param0,
+      timeToTransmute: _contractread_121__out_param0,
+      transmutationFee: _contractread_122__out_param0,
     }));
 });
 
@@ -3047,6 +3466,24 @@ ponder.on("transmuterV3:Transfer", async ({ event, context }) => {
     functionName: "totalLocked",
     blockNumber: event.block.number,
   });
+  const _contractread_120__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "exitFee",
+    blockNumber: event.block.number,
+  });
+  const _contractread_121__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "timeToTransmute",
+    blockNumber: event.block.number,
+  });
+  const _contractread_122__out_param0 = await context.client.readContract({
+    abi: transmuterV3Abi,
+    address: event.log.address,
+    functionName: "transmutationFee",
+    blockNumber: event.block.number,
+  });
   const _typecast_109__result = event.transaction.hash;
   const _typecast_110__result = event.block.timestamp.toString();
   const _strconcat_111__result = `${_typecast_109__result}/${_typecast_110__result}`;
@@ -3060,6 +3497,9 @@ ponder.on("transmuterV3:Transfer", async ({ event, context }) => {
       totalLocked: _contractread_114__out_param0,
       timestamp: event.block.timestamp,
       transmuter: event.log.address,
+      exitFee: _contractread_120__out_param0,
+      timeToTransmute: _contractread_121__out_param0,
+      transmutationFee: _contractread_122__out_param0,
     })
     .onConflictDoUpdate((row) => ({
       chain: context.chain.name,
@@ -3068,6 +3508,9 @@ ponder.on("transmuterV3:Transfer", async ({ event, context }) => {
       totalLocked: _contractread_114__out_param0,
       timestamp: event.block.timestamp,
       transmuter: event.log.address,
+      exitFee: _contractread_120__out_param0,
+      timeToTransmute: _contractread_121__out_param0,
+      transmutationFee: _contractread_122__out_param0,
     }));
 });
 
