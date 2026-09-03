@@ -1,6 +1,7 @@
 import { db } from "ponder:api";
 import schema from "ponder:schema";
 import { Hono } from "hono";
+import { cors } from "hono/cors";
 import { client, graphql } from "ponder";
 
 const envNumber = (value: string | undefined, fallback: number): number => {
@@ -21,6 +22,10 @@ setInterval(() => {
 }, 60_000).unref();
 
 const app = new Hono();
+
+// CORS first: preflights answered without burning rate budget, and 429s
+// still carry CORS headers so browser clients can read them.
+app.use("*", cors());
 
 app.use("*", async (c, next) => {
   const ip =
@@ -57,7 +62,14 @@ app.use("/sql/db", async (c, next) => {
 });
 
 app.use("/sql/*", client({ db, schema }));
-app.use("/", graphql({ db, schema }));
-app.use("/graphql", graphql({ db, schema }));
+
+// Tight query limits for public exposure: each layer of GraphQL depth is at
+// least one sequential DB query, so keep depth low.
+const graphqlMiddleware = graphql(
+  { db, schema },
+  { maxOperationDepth: 5, maxOperationTokens: 500, maxOperationAliases: 10 },
+);
+app.use("/", graphqlMiddleware);
+app.use("/graphql", graphqlMiddleware);
 
 export default app;
