@@ -22,3 +22,6 @@ trustPolicy: no-downgrade
 
 # Allows ignoring the trust policy check for packages published more than the specified number of minutes ago
 trustPolicyIgnoreAfter: 10080
+
+allowBuilds:
+  esbuild: false

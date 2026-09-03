@@ -387,6 +387,14 @@ PONDER_RPC_URL_10=https://eth-optimism.g.alchemy.com/v2/YOUR_KEY
 PONDER_RPC_URL_42161=https://eth-arbitrum-one.g.alchemy.com/v2/YOUR_KEY
 ```
 
+Optional API tuning for the public endpoint (safe to omit — defaults shown):
+
+```
+API_RATE_LIMIT=100        # max requests per client IP per window
+API_RATE_WINDOW_MS=10000  # rate-limit window in milliseconds
+API_CACHE_SMAXAGE=10      # Cache-Control s-maxage (seconds) on /sql/db responses
+```
+
 > **Managed Postgres (Supabase, Neon, Railway):** Use the connection string
 > they give you.  If connections fail, try adding `?sslmode=require` to the URL.
 
