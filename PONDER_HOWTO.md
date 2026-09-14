@@ -175,6 +175,7 @@ Open `.env.local` in any text editor and fill in every blank value:
 PONDER_RPC_URL_1=https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY
 PONDER_RPC_URL_10=https://eth-optimism.g.alchemy.com/v2/YOUR_KEY
 PONDER_RPC_URL_42161=https://eth-arbitrum-one.g.alchemy.com/v2/YOUR_KEY
+PONDER_RPC_URL_8453=https://base-mainnet.g.alchemy.com/v2/YOUR_KEY
 
 # ── Database ───────────────────────────────────────────────────────────────
 # The connection string for your PostgreSQL database.
@@ -385,6 +386,7 @@ DATABASE_SCHEMA=public
 PONDER_RPC_URL_1=https://eth-mainnet.g.alchemy.com/v2/YOUR_KEY
 PONDER_RPC_URL_10=https://eth-optimism.g.alchemy.com/v2/YOUR_KEY
 PONDER_RPC_URL_42161=https://eth-arbitrum-one.g.alchemy.com/v2/YOUR_KEY
+PONDER_RPC_URL_8453=https://base-mainnet.g.alchemy.com/v2/YOUR_KEY
 ```
 
 Optional API tuning for the public endpoint (safe to omit — defaults shown):
@@ -459,7 +461,7 @@ pnpm start
 **`Error: Invalid RPC URL`**
 → Check that your `PONDER_RPC_URL_*` variable(s) are set in `.env.local` and
   are valid HTTPS URLs.  Required variable(s) for this project:
-  `PONDER_RPC_URL_1`, `PONDER_RPC_URL_10`, `PONDER_RPC_URL_42161`
+  `PONDER_RPC_URL_1`, `PONDER_RPC_URL_10`, `PONDER_RPC_URL_42161`, `PONDER_RPC_URL_8453`
 
 **`Peer authentication failed for user "postgres"`** (when running `psql -U postgres`)
 → On Linux, PostgreSQL only allows you to log in as the `postgres` database user

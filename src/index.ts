@@ -1646,7 +1646,7 @@ ponder.on("MYT:Abdicate", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -1692,7 +1692,7 @@ ponder.on("MYT:Accept", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -1771,7 +1771,7 @@ ponder.on("MYT:AccrueInterest", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -1851,7 +1851,7 @@ ponder.on("MYT:Allocate", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -1897,7 +1897,7 @@ ponder.on("MYT:AllowanceUpdatedByTransferFrom", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2028,7 +2028,7 @@ ponder.on("MYT:Deallocate", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2074,7 +2074,7 @@ ponder.on("MYT:DecreaseAbsoluteCap", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2120,7 +2120,7 @@ ponder.on("MYT:DecreaseRelativeCap", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2166,7 +2166,7 @@ ponder.on("MYT:DecreaseTimelock", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2245,7 +2245,7 @@ ponder.on("MYT:Deposit", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2291,7 +2291,7 @@ ponder.on("MYT:ForceDeallocate", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2337,7 +2337,7 @@ ponder.on("MYT:IncreaseAbsoluteCap", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2383,7 +2383,7 @@ ponder.on("MYT:IncreaseRelativeCap", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2429,7 +2429,7 @@ ponder.on("MYT:IncreaseTimelock", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2475,7 +2475,7 @@ ponder.on("MYT:Permit", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2521,7 +2521,7 @@ ponder.on("MYT:RemoveAdapter", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2567,7 +2567,7 @@ ponder.on("MYT:Revoke", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2613,7 +2613,7 @@ ponder.on("MYT:SetAdapterRegistry", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2659,7 +2659,7 @@ ponder.on("MYT:SetForceDeallocatePenalty", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2705,7 +2705,7 @@ ponder.on("MYT:SetLiquidityAdapterAndData", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2751,7 +2751,7 @@ ponder.on("MYT:SetManagementFee", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2797,7 +2797,7 @@ ponder.on("MYT:SetManagementFeeRecipient", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2843,7 +2843,7 @@ ponder.on("MYT:SetMaxRate", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2889,7 +2889,7 @@ ponder.on("MYT:Submit", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2935,7 +2935,7 @@ ponder.on("MYT:Transfer", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -2971,7 +2971,7 @@ ponder.on("MYT:Withdraw", async ({ event, context }) => {
           myt: event.log.address,
           txHash: event.transaction.hash,
           blockNumber: event.block.number,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {
@@ -3015,7 +3015,7 @@ ponder.on("MYT:Withdraw", async ({ event, context }) => {
           myt: event.log.address,
           totalAssets: _contractread_40__out_param0,
           totalSupply: _contractread_41__out_param0,
-          timeStamp: event.block.timestamp,
+          timestamp: event.block.timestamp,
         });
         break;
       } catch (__e) {

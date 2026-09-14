@@ -266,7 +266,7 @@ export const mytTotalAssetsAndSupply = onchainTable(
     myt: t.hex(),
     totalAssets: t.bigint(),
     totalSupply: t.bigint(),
-    timeStamp: t.bigint(),
+    timestamp: t.bigint(),
   }),
   (table) => ({
     chainIdx: index().on(table.chain),
@@ -452,7 +452,7 @@ export const mytWithdraw = onchainTable(
     myt: t.hex(),
     txHash: t.hex(),
     blockNumber: t.bigint(),
-    timeStamp: t.bigint(),
+    timestamp: t.bigint(),
   }),
   (table) => ({
     chainIdx: index().on(table.chain),

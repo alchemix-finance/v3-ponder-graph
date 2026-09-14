@@ -13,6 +13,7 @@ export default createConfig({
     mainnet: { id: 1, rpc: process.env.PONDER_RPC_URL_1 },
     optimism: { id: 10, rpc: process.env.PONDER_RPC_URL_10 },
     arbitrumOne: { id: 42161, rpc: process.env.PONDER_RPC_URL_42161 },
+    base: { id: 8453, rpc: process.env.PONDER_RPC_URL_8453 },
   },
   contracts: {
     AlchemistV3Position: {
@@ -38,6 +39,10 @@ export default createConfig({
             "0xF700c7e40efCA6f7a810e172AFCee3592ff4aD33",
           ],
           startBlock: 452291309,
+        },
+        base: {
+          address: "0xDeD3A04612FF12b57317abE38e68026Fc9D28114",
+          startBlock: 51125655,
         },
       },
     },
@@ -65,6 +70,10 @@ export default createConfig({
           ],
           startBlock: 452291182,
         },
+        base: {
+          address: "0xb8BeFE5a6941ca4022a52042075ff269C3C67467",
+          startBlock: 51125654,
+        },
       },
     },
     alchemistV3: {
@@ -91,6 +100,10 @@ export default createConfig({
           ],
           startBlock: 452291301,
         },
+        base: {
+          address: "0xEb380d86EeD275C9F2eD77745aB1B2ccf364BF7A",
+          startBlock: 51125655,
+        },
       },
     },
     transmuterV3: {
@@ -116,6 +129,10 @@ export default createConfig({
             "0x693b7594Ae0633d9c5574D0da46a040f92F5b281",
           ],
           startBlock: 452291254,
+        },
+        base: {
+          address: "0x5B1c7180C630d3B2b6782Df70f43aE5Ea80425ba",
+          startBlock: 51125655,
         },
       },
     },
