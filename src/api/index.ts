@@ -63,11 +63,14 @@ app.use("/sql/db", async (c, next) => {
 
 app.use("/sql/*", client({ db, schema }));
 
-// Tight query limits for public exposure: each layer of GraphQL depth is at
-// least one sequential DB query, so keep depth low.
+// Query limits for public exposure. The schema declares no relations, so data
+// queries cannot nest beyond ~5 levels regardless of the depth cap; the cap
+// exists to bound introspection, which Ponder does not exempt. The standard
+// GraphiQL introspection query is 15 levels deep, so 20 keeps the playground's
+// schema tab working. Aliases are the real fan-out guard.
 const graphqlMiddleware = graphql(
   { db, schema },
-  { maxOperationDepth: 5, maxOperationTokens: 500, maxOperationAliases: 10 },
+  { maxOperationDepth: 20, maxOperationTokens: 1000, maxOperationAliases: 10 },
 );
 app.use("/", graphqlMiddleware);
 app.use("/graphql", graphqlMiddleware);
