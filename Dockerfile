@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:1.7
 
-FROM node:20-alpine AS base
+FROM node:24-alpine AS base
 RUN apk add --no-cache libc6-compat \
- && npm install -g pnpm@10
+ && npm install -g pnpm@12
 WORKDIR /app
 
 FROM base AS deps
