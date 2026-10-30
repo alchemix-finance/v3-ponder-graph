@@ -20,7 +20,7 @@ GraphQL API — no waiting for RPC calls, no parsing raw transaction logs yourse
 
 ## Step 1 — Install Node.js and pnpm
 
-Ponder requires **Node.js 18 or later**.  The easiest way to install it is via
+Ponder requires **Node.js 22.12 or later** (the Docker image uses Node 24).  The easiest way to install it is via
 `nvm` (Node Version Manager), which lets you switch Node versions without
 touching your system install.
 
@@ -28,15 +28,15 @@ touching your system install.
 # 1. Install nvm
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
 
-# 2. Close and reopen your terminal, then install Node 20
-nvm install 20
-nvm use 20
+# 2. Close and reopen your terminal, then install Node 24
+nvm install 24
+nvm use 24
 
 # 3. Install pnpm (the package manager Ponder uses)
 npm install -g pnpm
 
 # 4. Verify everything installed correctly
-node --version    # should print v20.x.x
+node --version    # should print v24.x.x
 pnpm --version    # should print 8.x.x or later
 ```
 
